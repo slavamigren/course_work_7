@@ -7,7 +7,26 @@ from habits.serializers import HabitSerializer, NiceHabitSerializer, PublicHabit
 
 
 class HabitViewSet(ModelViewSet):
-    """Контроллер полезных привычек"""
+    """
+    Контроллер полезных привычек
+    Обязательные поля модели Habit:
+        title: CharField, max_length=30, название привычки
+        action: CharField, max_length=100, короткое описание действия
+        period: CharField, max_length=7, default='1234567' периодичность действия (и напоминания о действии)
+        строка с номерами дней недели, могут использоваться только цифры от 1 до 7
+        durations: SmallIntegerField, default=120, min=1, max=120, продолжительность действия
+        в секундах, максимум 120 секунд
+
+    Необязательные поля:
+        place: CharField, max_length=100, место для действия
+        time: TimeField, время для действия, секунды должны быть 00
+        nice_habit: ForeignKey(NiceHabit) приятная привычка, привязанная к этой полезной привычке,
+        может быть заполнено одно из двух полей nice_habit или reward
+        reward: CharField, max_length=100, вознаграждение за выполненное действие, может быть заполнено
+        одно из двух полей reward или nice_habit
+        is_public: BooleanField, default=False, признак публичности привычки, если True, привычку могут
+        просматривать все пользователи ресурса
+    """
     queryset = Habit.objects.all()
     serializer_class = HabitSerializer
     permission_classes = [IsOwner]
@@ -25,7 +44,20 @@ class HabitViewSet(ModelViewSet):
 
 
 class NiceHabitViewSet(ModelViewSet):
-    """Контроллер приятных привычек"""
+    """
+    Контроллер приятных привычек
+    Обязательные поля модели NiceHabit:
+        title: CharField, max_length=30, название привычки
+        action: CharField, max_length=100, короткое описание действия
+        durations: SmallIntegerField, default=120, min=1, max=120, продолжительность действия
+        в секундах, максимум 120 секунд
+
+    Необязательные поля:
+        place: CharField, max_length=100, место для действия
+        time: TimeField, время для действия, секунды должны быть 00
+        is_public: BooleanField, default=False, признак публичности привычки, если True, привычку могут
+        просматривать все пользователи ресурса
+    """
     queryset = NiceHabit.objects.all()
     serializer_class = NiceHabitSerializer
     permission_classes = [IsOwner]

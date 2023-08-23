@@ -44,8 +44,9 @@ INSTALLED_APPS = [
     'users',
     'habits',
     'rest_framework_simplejwt',
-    # 'drf_yasg',
-    # 'django_celery_beat'
+    'drf_yasg',
+    'django_celery_beat',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -56,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'conf.urls'
@@ -170,3 +172,24 @@ CELERY_TIMEZONE = "Europe/Moscow"
 
 # Флаг отслеживания выполнения задач
 CELERY_TASK_TRACK_STARTED = True
+
+DJANGO_CELERY_BEAT_TZ_AWARE = False  # использовать в django_celery_beat текущий часовой пояс
+
+# команда для запуска worker: celery -A conf worker -l INFO -P eventlet
+# команда для запуска beat: celery -A conf beat -l info -S django
+
+
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
+
+# настройки CORS
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:8000',  # Замените на адрес вашего фронтенд-сервера
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:8000", #  Замените на адрес вашего фронтенд-сервера
+    # и добавьте адрес бэкенд-сервера
+]
+
+CORS_ALLOW_ALL_ORIGINS = False
+

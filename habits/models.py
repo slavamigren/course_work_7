@@ -16,7 +16,7 @@ class NiceHabit(models.Model):
 
     Необязательные поля:
         place: CharField, max_length=100, место для действия
-        time: TimeField, время для действия
+        time: TimeField, время для действия, секунды должны быть 00
         is_public: BooleanField, default=False, признак публичности привычки, если True, привычку могут
         просматривать все пользователи ресурса
     """
@@ -26,6 +26,11 @@ class NiceHabit(models.Model):
     place = models.CharField(max_length=100, **NULLABLE, verbose_name='место')
     time = models.TimeField(**NULLABLE, verbose_name='время')
     action = models.CharField(max_length=100, verbose_name='действие')
+    period = models.CharField(
+        max_length=7,
+        default='1234567',
+        verbose_name='периодичность'
+    )
     durations = models.SmallIntegerField(default=120,
                                          validators=[MaxValueValidator(120), MinValueValidator(1)],
                                          verbose_name='продолжительность')
@@ -52,7 +57,7 @@ class Habit(models.Model):
 
     Необязательные поля:
         place: CharField, max_length=100, место для действия
-        time: TimeField, время для действия
+        time: TimeField, время для действия, секунды должны быть 00
         nice_habit: ForeignKey(NiceHabit) приятная привычка, привязанная к этой полезной привычке,
         может быть заполнено одно из двух полей nice_habit или reward
         reward: CharField, max_length=100, вознаграждение за выполненное действие, может быть заполнено

@@ -6,11 +6,12 @@ from habits.validators import RewardValidator, PeriodValidator
 
 class NiceHabitSerializer(serializers.ModelSerializer):
     """
-    Сериализатор модели Habit
+    Сериализатор модели NiceHabit
     """
     class Meta:
         model = NiceHabit
         fields = '__all__'
+        validators = [PeriodValidator()]
 
 
 class HabitSerializer(serializers.ModelSerializer):

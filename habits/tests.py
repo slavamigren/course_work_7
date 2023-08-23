@@ -1,5 +1,3 @@
-import copy
-
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -173,8 +171,7 @@ class HabitTestCase(APITestCase):
             data=wrong_data
         )
         self.assertEqual(
-            {'non_field_errors': ['Вы можете использовать только набор из 7 цифр от 1 до 7']}
-            ,
+            {'non_field_errors': ['Вы можете использовать только набор из 7 цифр от 1 до 7']},
             response.json()
         )
 
@@ -467,3 +464,6 @@ class PublicNiceHabitTestCase(APITestCase):
             response.status_code,
             status.HTTP_200_OK
         )
+# запуск тестов: python manage.py test
+# запуск подсчёта покрытия кода тестами: coverage run --source='.' manage.py test
+# вывод отчёта о покрытии тестами: coverage report
