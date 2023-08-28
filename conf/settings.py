@@ -83,12 +83,25 @@ WSGI_APPLICATION = 'conf.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# настройки для запуска из IDE
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': os.getenv("database"),
+#         'USER': os.getenv("user"),
+#         'PASSWORD': os.getenv("password"),
+#     }
+# }
+
+# настройки для docker
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv("database"),
-        'USER': os.getenv("user"),
-        'PASSWORD': os.getenv("password"),
+        'NAME': os.getenv("POSTGRES_DB"),
+        'USER': os.getenv("POSTGRES_USER"),
+        'PASSWORD': os.getenv("POSTGRES_PASSWORD"),
+        'HOST': os.getenv("POSTGRES_HOST"),
+        'PORT': os.getenv("POSTGRES_PORT"),
     }
 }
 
@@ -130,6 +143,8 @@ STATICFILES_DIRS = (
     BASE_DIR / 'static/',
 )
 
+STATIC_ROOT = 'staticfiles'
+
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -161,11 +176,20 @@ SIMPLE_JWT = {
 
 # Настройки для Celery
 
-# URL-адрес брокера сообщений
-CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Например, Redis, который по умолчанию работает на порту 6379
 
-# URL-адрес брокера результатов, также Redis
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+# настройки для запуска из IDE
+# # URL-адрес брокера сообщений
+# CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Например, Redis, который по умолчанию работает на порту 6379
+#
+# # URL-адрес брокера результатов, также Redis
+# CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+
+
+# настройки для docker
+CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL")
+CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND")
+
+
 
 # Часовой пояс для работы Celery
 CELERY_TIMEZONE = "Europe/Moscow"
@@ -193,3 +217,10 @@ CSRF_TRUSTED_ORIGINS = [
 
 CORS_ALLOW_ALL_ORIGINS = False
 
+# Настройки для Celery
+CELERY_BEAT_SCHEDULE = {
+    'task-name': {
+        'task': 'habits.tasks.check_habits_and_send',  # Путь к задаче
+        'schedule': timedelta(minutes=1),  # Расписание выполнения задачи (каждую минуту)
+    },
+}
